@@ -28,3 +28,32 @@
 	<cctype>
 	<cstdlib>
 
+1515724025 source:c:\projects\c++\add printer\main.cpp
+	<iostream>
+	<sstream>
+	"INIReader.h"
+	<cstdlib>
+	<vector>
+	<windows.h>
+
+1515361692 c:\projects\c++\add printer\inireader.h
+	<stdio.h>
+	<stdio.h>
+	<ctype.h>
+	<string.h>
+	<stdlib.h>
+	<map>
+	<set>
+	<string>
+	<algorithm>
+	<cctype>
+	<cstdlib>
+
+1514140582 source:c:\projects\c++\add printer\resource.rc
+	<windows.h>
+	<commctrl.h>
+	<richedit.h>
+	"resource.h"
+
+1514140582 c:\projects\c++\add printer\resource.h
+

@@ -9,15 +9,6 @@
 
 using namespace std;
 
-/*string sections(INIReader &reader)
-{
-    stringstream ss;
-    set<string> sections = reader.Sections();
-    for (set<string>::iterator it = sections.begin(); it != sections.end(); ++it)
-        ss << *it << ",";
-    return ss.str();
-}
-*/
 typedef BOOL (WINAPI *LPFN_ISWOW64PROCESS) (HANDLE, PBOOL);
 
 LPFN_ISWOW64PROCESS fnIsWow64Process;
@@ -81,7 +72,7 @@ int main()
 
     for (size_t i=0; i< vect.size(); i++) {
         PortNameAndNumber = PortName + "_" + to_string(i + 1);
-        string create_port = "Cscript c:\\windows\\system32\\printing_admin_scripts\\en-us\\Prnport.vbs -a -r " + PortNameAndNumber + " -h " + vect.at(i) + " -o lpr -q " + LPRName;
+        string create_port = "Cscript .\\scripts\\Prnport.vbs -a -r " + PortNameAndNumber + " -h " + vect.at(i) + " -o lpr -q " + LPRName;
         const char *cCreate_port = create_port.c_str();
         system(cCreate_port);
         if(i > 0 && i < vect.size()){
@@ -100,11 +91,12 @@ int main()
     const char *cInstall_printer = install_printer.c_str();
     const char *cAdd_ports_to_queue = add_ports_to_queue.c_str();
 
-    cout << cInstall_driver << endl;
+
+    cout << "Installing driver " + DriverName << endl;
 	system(cInstall_driver);
-	cout << cInstall_printer << endl;
+	cout << "Installing printer queue " + PrinterName << endl;
 	system(cInstall_printer);
-    cout << cAdd_ports_to_queue << endl;
+    cout << "Configuring printer..."  << endl;
 	system(cAdd_ports_to_queue);
 
 
