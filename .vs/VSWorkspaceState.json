@@ -3,8 +3,10 @@
     "",
     "\\bin",
     "\\bin\\Debug",
+    "\\bin\\Release",
     "\\obj",
     "\\obj\\Debug"
   ],
+  "SelectedNode": "\\Driver",
   "PreviewInSolutionExplorer": false
 }

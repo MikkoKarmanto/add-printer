@@ -12,6 +12,16 @@
       "MIMode": "gdb",
       "miDebuggerPath": "${env.MINGW_PREFIX}\\bin\\gdb.exe",
       "externalConsole": true
+    },
+    {
+      "cwd": "${workspaceRoot}",
+      "externalConsole": true,
+      "miDebuggerPath": "${env.MINGW_PREFIX}\\bin\\gdb.exe",
+      "MIMode": "gdb",
+      "name": "C:\\Projects\\C++\\Add Printer",
+      "program": "${debugInfo.target}",
+      "project": "",
+      "type": "cppdbg"
     }
   ]
 }
