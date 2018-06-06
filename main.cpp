@@ -8,19 +8,12 @@
 #include <string>
 
 typedef BOOL (WINAPI *LPFN_ISWOW64PROCESS) (HANDLE, PBOOL);
-
 LPFN_ISWOW64PROCESS fnIsWow64Process;
 
 BOOL IsWow64(){
     BOOL bIsWow64 = FALSE;
-
-    //IsWow64Process is not available on all supported versions of Windows.
-    //Use GetModuleHandle to get a handle to the DLL that contains the function
-    //and GetProcAddress to get a pointer to the function if available.
-
     fnIsWow64Process = (LPFN_ISWOW64PROCESS) GetProcAddress(
         GetModuleHandle(TEXT("kernel32")),"IsWow64Process");
-
     if(NULL != fnIsWow64Process){
         if (!fnIsWow64Process(GetCurrentProcess(),&bIsWow64)){
             //handle error
@@ -44,10 +37,10 @@ bool cmdOptionExists(char** begin, char** end, const std::string& option){
 
 int main(int argc, char* argv[]){
     INIReader reader("settings.ini");
-    // Check if ini file found or command line argument where passed. 
+    // Check if ini file found or command line arguments were passed. 
     if (reader.ParseError() < 0){
         std::cout << "No ini file found" << std::endl;
-        return 1;
+        
     }
     std::vector<string> vect;
     string DriverInfLoc, PortNames, PortNameAndNumber, install_printer, ServerIP, DriverName, PrinterName;
@@ -57,7 +50,7 @@ int main(int argc, char* argv[]){
         || cmdOptionExists(argv, argv+argc, "-?") 
         || cmdOptionExists(argv, argv+argc, "-help"))
     {
-        std::cout << "Usage: addprinter [-HELP] [-IP server_ip][-DRIVER driver][-NAME name][-PORTNAME name][-LPR name][-PRINTER ip]" << std::endl;
+        std::cout << "Usage: addprinter [-HELP] [-IP server_ip][-DRIVER driver][-NAME name][-PORTNAME name][-LPR name][-PRINTER ip][-INF path]" << std::endl;
         std::cout <<  "Arguments:" << std::endl;
         std::cout <<  "-IP           - IP address of the server" << std::endl;
         std::cout <<  "-LPR          - queue name, applies to TCP LPR ports only" << std::endl;
@@ -65,8 +58,7 @@ int main(int argc, char* argv[]){
         std::cout <<  "-DRIVER       - Driver name to be installed, have to match diver name in .INF file" << std::endl;
         std::cout <<  "-NAME         - Print queue name" << std::endl;
         std::cout <<  "-PRINTER      - ip of a printer to get settings from" << std::endl;
-        std::cout <<  "The last example will try to get the device settings at the specified IP address." << std::endl;
-        std::cout <<  "If a device is detected, then a TCP port is added with the preferred settings for that device." << std::endl;
+        std::cout <<  "-INF          - Inf file location e.g. .\\Driver\\x64\\KOAXWJ__.inf" << std::endl;
         return 1;
     }
 
@@ -79,6 +71,7 @@ int main(int argc, char* argv[]){
     if (option)
     {
         DriverName = option;
+        DriverName = "\"" + DriverName + "\"";
     }
     option = getCmdOption(argv, argv + argc, "-NAME");
     if (option)
@@ -100,13 +93,19 @@ int main(int argc, char* argv[]){
     {
         IP = option;
     }
+    option = getCmdOption(argv, argv + argc, "-INF");
+    if (option)
+    {
+        DriverInfLoc = option;
+        DriverInfLoc = "\"" + DriverInfLoc + "\"";
+    }
 
     // Read settings from ini file if parameters are not given.
     if (ServerIP.length() < 1){
         ServerIP = reader.Get("Server", "serverIP", "127.0.0.1");
     } 
     if (DriverName.length() < 1){
-        DriverName = reader.Get("Driver", "DriverName", "UNKNOWN");
+        DriverName = reader.Get("Driver", "DriverName", "KONICA MINOLTA C368SeriesPCL");
     }
     if (PrinterName.length() < 1){
         PrinterName = reader.Get("Queue", "PrinterName", "UNKNOWN");
@@ -120,13 +119,14 @@ int main(int argc, char* argv[]){
     if (IP.length() < 1){
         IP = reader.Get("Printer", "IP", "UNKNOWN");
     }
-
-    // Check CPU architecture and load correct drivers.
-    if(IsWow64()) {
-        DriverInfLoc = reader.Get("Driver", "DriverInfLoc_x64", "UNKNOWN");
-    }
-    else {
-        DriverInfLoc = reader.Get("Driver", "DriverInfLoc_x86", "UNKNOWN");
+    if (DriverInfLoc.length() < 1){
+        // Check CPU architecture and load correct drivers.
+        if(IsWow64()) {
+            DriverInfLoc = reader.Get("Driver", "DriverInfLoc_x64", ".\\Driver\\x64\\KOAXWJ__.inf");
+        }
+        else {
+            DriverInfLoc = reader.Get("Driver", "DriverInfLoc_x86", ".\\Driver\\x84\\KOAXWJ__.inf");
+        }
     }
 
     std::stringstream ss(ServerIP);
@@ -159,17 +159,22 @@ int main(int argc, char* argv[]){
     else {
         install_printer = "rundll32 printui.dll,PrintUIEntry /if /b " + PrinterName + " /f " + DriverInfLoc + " /r " + PortNameAndNumber + " /m " + DriverName;
     }
-
-    string install_driver = "rundll32 printui.dll,PrintUIEntry /ia /f " + DriverInfLoc + " /m " + DriverName ;
+    
+    string install_driver = "rundll32 printui.dll,PrintUIEntry /ia /f " + DriverInfLoc + " /m " + DriverName;
     string add_ports_to_queue = "rundll32 printui.dll,PrintUIEntry /Xs /n " + PrinterName + " PortName " + PortNames + " attributes -EnableBidi";
 
     const char *cInstall_driver = install_driver.c_str();
     const char *cInstall_printer = install_printer.c_str();
     const char *cAdd_ports_to_queue = add_ports_to_queue.c_str();
 
-	system(cInstall_driver);
-	system(cInstall_printer);
-	system(cAdd_ports_to_queue);
+    try{
+        system(cInstall_driver);
+        system(cInstall_printer);
+        system(cAdd_ports_to_queue);
+    }catch(int e){
+        std::cout << "An exception occured." << e << std::endl; 
+    };
+
 
     return 0;
 }
