@@ -13,8 +13,8 @@ Supported Operating systems:
 
 File structure:
     (Base folder)
-    |----- .\Driver\x64\(64 bit driver files goes here).
-    |----- .\Driver\x86\(32 bit driver files goes here).
+    |----- .\Driver\x64\ (64 bit driver files goes here)
+    |----- .\Driver\x86\ (32 bit driver files goes here)
     |----- .\scripts\
     |- settings.ini
     |- LICENSE.txt

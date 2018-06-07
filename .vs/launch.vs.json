@@ -1,0 +1,27 @@
+{
+  "version": "0.2.1",
+  "defaults": {},
+  "configurations": [
+    {
+      "type": "cppdbg",
+      "name": "C:\\Projects\\C++\\Add Printer\\Add Printer",
+      "project": "",
+      "cwd": "${workspaceRoot}",
+      "program": "${debugInfo.target}",
+      "processId": 0,
+      "MIMode": "gdb",
+      "miDebuggerPath": "${env.MINGW_PREFIX}\\bin\\gdb.exe",
+      "externalConsole": true
+    },
+    {
+      "cwd": "${workspaceRoot}",
+      "externalConsole": true,
+      "miDebuggerPath": "${env.MINGW_PREFIX}\\bin\\gdb.exe",
+      "MIMode": "gdb",
+      "name": "C:\\Projects\\C++\\Add Printer",
+      "program": "${debugInfo.target}",
+      "project": "",
+      "type": "cppdbg"
+    }
+  ]
+}

@@ -6,6 +6,7 @@
 #include <windows.h>
 #include <algorithm>
 #include <string>
+#include <fstream>
 
 typedef BOOL (WINAPI *LPFN_ISWOW64PROCESS) (HANDLE, PBOOL);
 LPFN_ISWOW64PROCESS fnIsWow64Process;
@@ -33,6 +34,15 @@ char* getCmdOption(char ** begin, char ** end, const std::string & option){
 
 bool cmdOptionExists(char** begin, char** end, const std::string& option){
     return std::find(begin, end, option) != end;
+}
+
+void writeToFile(std::string txtToWrite){
+    std::ofstream writeToFile;
+    writeToFile.open("install.log", std::ios_base::out | std::ios_base::trunc);
+    if(writeToFile.is_open()){
+        writeToFile << txtToWrite;
+        writeToFile.close();
+    }
 }
 
 int main(int argc, char* argv[]){
