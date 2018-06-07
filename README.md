@@ -1,4 +1,4 @@
-Add Printer.exe is simple program that, installs and confiqures printer queue to be used with Muti Function Devices (MFP) and/or with print management systems. e.g Y-Soft SafeQ. This program was writen to ease deployment of printer queues to client computers, that cannot utilize print servers for deployment.
+Addprinter.exe is simple program that, installs and configures printer queue to be used with Multi Function Devices (MFP) and/or with print management systems. e.g Y-Soft SafeQ. This program was written to ease deployment of printer queues to client computers, that cannot utilize print servers for deployment.
 
 This program is built for KONICA MINOLTA MFP devices and Y-Soft SafeQ. No other vendor devices or software have been tested.
 
