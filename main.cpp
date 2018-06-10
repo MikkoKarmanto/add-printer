@@ -48,7 +48,7 @@ void writeToFile(std::string txtToWrite){
 int main(int argc, char* argv[]){
     writeToFile("Geting INI file ready to read");
     INIReader reader("settings.ini");
-    // Check if ini file found or command line arguments were passed. 
+    // Check if ini file found.
     if (reader.ParseError() < 0){
         std::cout << "No ini file found" << std::endl;
         writeToFile("\nNo INI file found");
@@ -148,11 +148,10 @@ int main(int argc, char* argv[]){
         }
     }
 
+    // handle multiple IPs passed.
     std::stringstream ss(serverIP);
-    while (ss >> serverIP)
-    {
+    while (ss >> serverIP){
         vect.push_back(serverIP);
-
         if (ss.peek() == ',')
             ss.ignore();
     }
